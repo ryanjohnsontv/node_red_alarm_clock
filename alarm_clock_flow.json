@@ -1,0 +1,1372 @@
+[
+    {
+        "id": "da55e56e.fcd428",
+        "type": "tab",
+        "label": "Good Morning/Good Night",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "649d462.01f79b8",
+        "type": "join",
+        "z": "da55e56e.fcd428",
+        "name": "",
+        "mode": "custom",
+        "build": "array",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "accumulate": false,
+        "timeout": "",
+        "count": "2",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 550,
+        "y": 60,
+        "wires": [
+            [
+                "ecc74d34.cd866"
+            ]
+        ]
+    },
+    {
+        "id": "ecc74d34.cd866",
+        "type": "function",
+        "z": "da55e56e.fcd428",
+        "name": "Compare Times",
+        "func": "newmsg = {};\nif (msg.payload[0] == msg.payload[1]) {\n    newmsg.payload = \"True\";\n} else {\n    newmsg.payload = \"False\";\n}\n\nreturn newmsg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 580,
+        "y": 100,
+        "wires": [
+            [
+                "923cc946.d42ea8"
+            ]
+        ]
+    },
+    {
+        "id": "923cc946.d42ea8",
+        "type": "switch",
+        "z": "da55e56e.fcd428",
+        "name": "Is it Time?",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "True",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 570,
+        "y": 140,
+        "wires": [
+            [
+                "9a714067.5fb6c"
+            ]
+        ]
+    },
+    {
+        "id": "5df974e3.874b1c",
+        "type": "api-current-state",
+        "z": "da55e56e.fcd428",
+        "name": "Get Alarm Time",
+        "server": "4ee348e3.abe878",
+        "version": 1,
+        "outputs": 1,
+        "halt_if": "",
+        "halt_if_type": "str",
+        "halt_if_compare": "is",
+        "override_topic": true,
+        "entity_id": "input_datetime.alarm_clock_time",
+        "state_type": "str",
+        "state_location": "payload",
+        "override_payload": "msg",
+        "entity_location": "data",
+        "override_data": "msg",
+        "blockInputOverrides": false,
+        "x": 360,
+        "y": 140,
+        "wires": [
+            [
+                "d93b36ea.7af8d8"
+            ]
+        ]
+    },
+    {
+        "id": "ec4ec36c.0460f",
+        "type": "moment",
+        "z": "da55e56e.fcd428",
+        "name": "Current Time",
+        "topic": "",
+        "input": "payload",
+        "inputType": "msg",
+        "inTz": "America/Chicago",
+        "adjAmount": "0",
+        "adjType": "minutes",
+        "adjDir": "subtract",
+        "format": "H:mm",
+        "locale": "C",
+        "output": "payload",
+        "outputType": "msg",
+        "outTz": "America/Chicago",
+        "x": 350,
+        "y": 60,
+        "wires": [
+            [
+                "649d462.01f79b8"
+            ]
+        ]
+    },
+    {
+        "id": "d93b36ea.7af8d8",
+        "type": "moment",
+        "z": "da55e56e.fcd428",
+        "name": "Alarm - 10min",
+        "topic": "",
+        "input": "payload",
+        "inputType": "msg",
+        "inTz": "America/Chicago",
+        "adjAmount": "10",
+        "adjType": "minutes",
+        "adjDir": "subtract",
+        "format": "H:mm",
+        "locale": "C",
+        "output": "payload",
+        "outputType": "msg",
+        "outTz": "America/Chicago",
+        "x": 360,
+        "y": 100,
+        "wires": [
+            [
+                "649d462.01f79b8"
+            ]
+        ]
+    },
+    {
+        "id": "9a714067.5fb6c",
+        "type": "api-call-service",
+        "z": "da55e56e.fcd428",
+        "name": "Alarm Routine On",
+        "server": "4ee348e3.abe878",
+        "version": 1,
+        "debugenabled": false,
+        "service_domain": "input_boolean",
+        "service": "turn_on",
+        "entityId": "input_boolean.alarm_routine",
+        "data": "",
+        "dataType": "json",
+        "mergecontext": "",
+        "output_location": "payload",
+        "output_location_type": "msg",
+        "mustacheAltTags": false,
+        "x": 750,
+        "y": 140,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "cefa88ad.6acc78",
+        "type": "server-state-changed",
+        "z": "da55e56e.fcd428",
+        "name": "Good Night",
+        "server": "4ee348e3.abe878",
+        "version": 1,
+        "entityidfilter": "input_boolean.good_night",
+        "entityidfiltertype": "substring",
+        "outputinitially": false,
+        "state_type": "str",
+        "haltifstate": "on",
+        "halt_if_type": "str",
+        "halt_if_compare": "is",
+        "outputs": 2,
+        "output_only_on_state_change": false,
+        "x": 770,
+        "y": 660,
+        "wires": [
+            [
+                "8c848383.1f56a",
+                "8f337be1.584558",
+                "5ec2a278.c80fcc",
+                "2837c88f.f0f398",
+                "b55aed44.a67e6"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "8f337be1.584558",
+        "type": "api-call-service",
+        "z": "da55e56e.fcd428",
+        "name": "Turn Off Lights",
+        "server": "4ee348e3.abe878",
+        "version": 1,
+        "debugenabled": false,
+        "service_domain": "light",
+        "service": "turn_off",
+        "entityId": "light.bathroom, light.bedroom, light.living_room, light.living_room_lights, light.office, light.ryans_office, light.bedroom_tv_light, light.closet_light",
+        "data": "{\"transition\":15}",
+        "dataType": "json",
+        "mergecontext": "",
+        "output_location": "",
+        "output_location_type": "none",
+        "mustacheAltTags": false,
+        "x": 980,
+        "y": 620,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "8c848383.1f56a",
+        "type": "api-call-service",
+        "z": "da55e56e.fcd428",
+        "name": "Stairway Light 10%",
+        "server": "4ee348e3.abe878",
+        "version": 1,
+        "debugenabled": false,
+        "service_domain": "light",
+        "service": "turn_on",
+        "entityId": "light.stairway",
+        "data": "{\"brightness_pct\":10,\"transition\":15}",
+        "dataType": "json",
+        "mergecontext": "",
+        "output_location": "",
+        "output_location_type": "none",
+        "mustacheAltTags": false,
+        "x": 990,
+        "y": 660,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2837c88f.f0f398",
+        "type": "api-call-service",
+        "z": "da55e56e.fcd428",
+        "name": "Reset Boolean",
+        "server": "4ee348e3.abe878",
+        "version": 1,
+        "service_domain": "input_boolean",
+        "service": "turn_off",
+        "entityId": "input_boolean.good_night",
+        "data": "",
+        "dataType": "json",
+        "mergecontext": "",
+        "output_location": "",
+        "output_location_type": "none",
+        "mustacheAltTags": false,
+        "x": 980,
+        "y": 540,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5ec2a278.c80fcc",
+        "type": "api-call-service",
+        "z": "da55e56e.fcd428",
+        "name": "Turn On Bedroom Fan",
+        "server": "4ee348e3.abe878",
+        "version": 1,
+        "debugenabled": false,
+        "service_domain": "fan",
+        "service": "turn_on",
+        "entityId": "fan.bedroom_fan",
+        "data": "",
+        "dataType": "json",
+        "mergecontext": "",
+        "output_location": "",
+        "output_location_type": "none",
+        "mustacheAltTags": false,
+        "x": 1000,
+        "y": 700,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b59cd82.8f2ca28",
+        "type": "server-state-changed",
+        "z": "da55e56e.fcd428",
+        "name": "Good Morning",
+        "server": "4ee348e3.abe878",
+        "version": 1,
+        "entityidfilter": "input_boolean.good_morning",
+        "entityidfiltertype": "substring",
+        "outputinitially": false,
+        "state_type": "str",
+        "haltifstate": "on",
+        "halt_if_type": "str",
+        "halt_if_compare": "is",
+        "outputs": 2,
+        "output_only_on_state_change": false,
+        "x": 110,
+        "y": 660,
+        "wires": [
+            [
+                "bcc50a87.8d92d8",
+                "1e352f7c.4822a1",
+                "96c8157f.67b3a8",
+                "a5a9d871.f99c08"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "b55aed44.a67e6",
+        "type": "api-call-service",
+        "z": "da55e56e.fcd428",
+        "name": "Turn Off AC",
+        "server": "4ee348e3.abe878",
+        "version": 1,
+        "debugenabled": false,
+        "service_domain": "climate",
+        "service": "turn_off",
+        "entityId": "climate.home",
+        "data": "",
+        "dataType": "json",
+        "mergecontext": "",
+        "output_location": "",
+        "output_location_type": "none",
+        "mustacheAltTags": false,
+        "x": 970,
+        "y": 580,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "9d48b660.93a628",
+        "type": "api-call-service",
+        "z": "da55e56e.fcd428",
+        "name": "Turn Off Bedroom Fan",
+        "server": "4ee348e3.abe878",
+        "version": 1,
+        "debugenabled": false,
+        "service_domain": "fan",
+        "service": "turn_off",
+        "entityId": "fan.bedroom_fan",
+        "data": "",
+        "dataType": "json",
+        "mergecontext": "",
+        "output_location": "",
+        "output_location_type": "none",
+        "mustacheAltTags": false,
+        "x": 720,
+        "y": 320,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "bcc50a87.8d92d8",
+        "type": "api-call-service",
+        "z": "da55e56e.fcd428",
+        "name": "Turn Off Bedroom Fan",
+        "server": "4ee348e3.abe878",
+        "version": 1,
+        "debugenabled": false,
+        "service_domain": "fan",
+        "service": "turn_off",
+        "entityId": "fan.bedroom_fan",
+        "data": "",
+        "dataType": "json",
+        "mergecontext": "",
+        "output_location": "",
+        "output_location_type": "none",
+        "mustacheAltTags": false,
+        "x": 340,
+        "y": 700,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "1e352f7c.4822a1",
+        "type": "api-call-service",
+        "z": "da55e56e.fcd428",
+        "name": "Reset Boolean",
+        "server": "4ee348e3.abe878",
+        "version": 1,
+        "debugenabled": false,
+        "service_domain": "input_boolean",
+        "service": "turn_off",
+        "entityId": "input_boolean.good_morning",
+        "data": "",
+        "dataType": "json",
+        "mergecontext": "",
+        "output_location": "",
+        "output_location_type": "none",
+        "mustacheAltTags": false,
+        "x": 320,
+        "y": 540,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "96c8157f.67b3a8",
+        "type": "api-call-service",
+        "z": "da55e56e.fcd428",
+        "name": "Turn On Lights",
+        "server": "4ee348e3.abe878",
+        "version": 1,
+        "debugenabled": false,
+        "service_domain": "light",
+        "service": "turn_on",
+        "entityId": "light.stairway, light.bathroom, light.bedroom",
+        "data": "{\"brightness_pct\":100,\"transition\":15}",
+        "dataType": "json",
+        "mergecontext": "",
+        "output_location": "payload",
+        "output_location_type": "msg",
+        "mustacheAltTags": false,
+        "x": 320,
+        "y": 620,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2b6d0c70.220984",
+        "type": "api-call-service",
+        "z": "da55e56e.fcd428",
+        "name": "Arm Alarm - Night",
+        "server": "4ee348e3.abe878",
+        "version": 1,
+        "debugenabled": false,
+        "service_domain": "alarm_control_panel",
+        "service": "alarm_arm_night",
+        "entityId": "alarm_control_panel.home_alarm",
+        "data": "",
+        "dataType": "json",
+        "mergecontext": "",
+        "output_location": "payload",
+        "output_location_type": "msg",
+        "mustacheAltTags": false,
+        "x": 1110,
+        "y": 740,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "2a2adc1a.e781b4",
+        "type": "function",
+        "z": "da55e56e.fcd428",
+        "name": "",
+        "func": "var code = global.get(\"alarmCode\");\nnewMsg = {}\nnewMsg.payload = { data: { \"code\":code} };\nreturn newMsg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 950,
+        "y": 740,
+        "wires": [
+            [
+                "2b6d0c70.220984"
+            ]
+        ]
+    },
+    {
+        "id": "7873516f.c6e79",
+        "type": "api-call-service",
+        "z": "da55e56e.fcd428",
+        "name": "Turn On AC",
+        "server": "4ee348e3.abe878",
+        "version": 1,
+        "debugenabled": false,
+        "service_domain": "climate",
+        "service": "turn_on",
+        "entityId": "climate.home",
+        "data": "",
+        "dataType": "json",
+        "mergecontext": "",
+        "output_location": "",
+        "output_location_type": "none",
+        "mustacheAltTags": false,
+        "x": 510,
+        "y": 280,
+        "wires": [
+            [
+                "639a4d98.98a434"
+            ]
+        ]
+    },
+    {
+        "id": "3daeb65a.3ab3fa",
+        "type": "api-call-service",
+        "z": "da55e56e.fcd428",
+        "name": "Switch to Heat",
+        "server": "4ee348e3.abe878",
+        "version": 1,
+        "debugenabled": false,
+        "service_domain": "climate",
+        "service": "set_hvac_mode",
+        "entityId": "climate.home",
+        "data": "",
+        "dataType": "json",
+        "mergecontext": "",
+        "output_location": "",
+        "output_location_type": "none",
+        "mustacheAltTags": false,
+        "x": 720,
+        "y": 280,
+        "wires": [
+            [
+                "760d52fc.8d31bc"
+            ]
+        ]
+    },
+    {
+        "id": "264bbac8.06b266",
+        "type": "api-call-service",
+        "z": "da55e56e.fcd428",
+        "name": "Heat to 67",
+        "server": "4ee348e3.abe878",
+        "version": 1,
+        "debugenabled": false,
+        "service_domain": "climate",
+        "service": "set_temperature",
+        "entityId": "climate.home",
+        "data": "{\"temperature\":67}",
+        "dataType": "json",
+        "mergecontext": "",
+        "output_location": "",
+        "output_location_type": "none",
+        "mustacheAltTags": false,
+        "x": 950,
+        "y": 280,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "cdda7c36.0b082",
+        "type": "function",
+        "z": "da55e56e.fcd428",
+        "name": "Set Brightness",
+        "func": "newmsg = {}\nvar brightness = flow.get(\"brightness\");\nif (brightness < 100) {\n    var new_brightness = brightness + 1;\n    flow.set(\"brightness\", new_brightness);\n    newmsg.payload = {\n        \"brightness\": new_brightness\n    };\n    return newmsg;\n}\nelse if (brightness === 100) {\n    newmsg.payload = \"done\";\n    return [null, newmsg];\n}",
+        "outputs": 2,
+        "noerr": 0,
+        "x": 740,
+        "y": 400,
+        "wires": [
+            [
+                "c8cdcf2d.35f52"
+            ],
+            [
+                "dc430dd9.2e266",
+                "754ff40d.362c0c"
+            ]
+        ]
+    },
+    {
+        "id": "dc430dd9.2e266",
+        "type": "api-call-service",
+        "z": "da55e56e.fcd428",
+        "name": "Stop Routine",
+        "server": "4ee348e3.abe878",
+        "version": 1,
+        "debugenabled": false,
+        "service_domain": "input_boolean",
+        "service": "turn_off",
+        "entityId": "input_boolean.alarm_routine",
+        "data": "",
+        "dataType": "json",
+        "mergecontext": "",
+        "output_location": "",
+        "output_location_type": "none",
+        "mustacheAltTags": false,
+        "x": 930,
+        "y": 400,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e013390a.1e2258",
+        "type": "trigger",
+        "z": "da55e56e.fcd428",
+        "op1": "on",
+        "op2": "0",
+        "op1type": "str",
+        "op2type": "str",
+        "duration": "-1.2",
+        "extend": false,
+        "units": "s",
+        "reset": "stop",
+        "bytopic": "all",
+        "name": "",
+        "x": 550,
+        "y": 400,
+        "wires": [
+            [
+                "cdda7c36.0b082"
+            ]
+        ]
+    },
+    {
+        "id": "d1a5f9aa.6742c8",
+        "type": "change",
+        "z": "da55e56e.fcd428",
+        "name": "Stop",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "stop",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 330,
+        "y": 400,
+        "wires": [
+            [
+                "e013390a.1e2258",
+                "81a06948.86e888",
+                "6e0aba2a.5d4db4"
+            ]
+        ]
+    },
+    {
+        "id": "3bd34806.d657c8",
+        "type": "change",
+        "z": "da55e56e.fcd428",
+        "name": "Start",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "start",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "brightness",
+                "pt": "flow",
+                "to": "0",
+                "tot": "num"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 670,
+        "y": 360,
+        "wires": [
+            [
+                "e013390a.1e2258"
+            ]
+        ]
+    },
+    {
+        "id": "e681ea1a.07db18",
+        "type": "server-state-changed",
+        "z": "da55e56e.fcd428",
+        "name": "Alarm Routine On",
+        "server": "4ee348e3.abe878",
+        "version": 1,
+        "entityidfilter": "input_boolean.alarm_routine",
+        "entityidfiltertype": "substring",
+        "outputinitially": false,
+        "state_type": "str",
+        "haltifstate": "on",
+        "halt_if_type": "str",
+        "halt_if_compare": "is",
+        "outputs": 2,
+        "output_only_on_state_change": false,
+        "x": 130,
+        "y": 360,
+        "wires": [
+            [
+                "3158deb3.a02292",
+                "fd4dfa74.0bb0c8",
+                "d338439a.60718"
+            ],
+            [
+                "d1a5f9aa.6742c8"
+            ]
+        ]
+    },
+    {
+        "id": "754ff40d.362c0c",
+        "type": "delay",
+        "z": "da55e56e.fcd428",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "x": 920,
+        "y": 360,
+        "wires": [
+            [
+                "6aefcbee.e85d64"
+            ]
+        ]
+    },
+    {
+        "id": "9e907f3b.e953e",
+        "type": "api-call-service",
+        "z": "da55e56e.fcd428",
+        "name": "Arm Alarm - Home",
+        "server": "4ee348e3.abe878",
+        "version": 1,
+        "debugenabled": false,
+        "service_domain": "alarm_control_panel",
+        "service": "alarm_arm_home",
+        "entityId": "alarm_control_panel.home_alarm",
+        "data": "",
+        "dataType": "json",
+        "mergecontext": "",
+        "output_location": "payload",
+        "output_location_type": "msg",
+        "mustacheAltTags": false,
+        "x": 450,
+        "y": 740,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5ec658.4b52f9a8",
+        "type": "function",
+        "z": "da55e56e.fcd428",
+        "name": "",
+        "func": "var code = global.get(\"alarmCode\");\nnewMsg = {}\nnewMsg.payload = { data: { \"code\":code} };\nreturn newMsg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 290,
+        "y": 740,
+        "wires": [
+            [
+                "9e907f3b.e953e"
+            ]
+        ]
+    },
+    {
+        "id": "6aefcbee.e85d64",
+        "type": "api-call-service",
+        "z": "da55e56e.fcd428",
+        "name": "Good Morning On",
+        "server": "4ee348e3.abe878",
+        "version": 1,
+        "debugenabled": false,
+        "service_domain": "input_boolean",
+        "service": "turn_on",
+        "entityId": "input_boolean.good_morning",
+        "data": "",
+        "dataType": "json",
+        "mergecontext": "",
+        "output_location": "payload",
+        "output_location_type": "msg",
+        "mustacheAltTags": false,
+        "x": 1090,
+        "y": 360,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "4bdb62a7.4f275c",
+        "type": "link in",
+        "z": "da55e56e.fcd428",
+        "name": "",
+        "links": [
+            "a5a9d871.f99c08",
+            "a315249b.2cbd88"
+        ],
+        "x": 215,
+        "y": 280,
+        "wires": [
+            [
+                "d338439a.60718"
+            ]
+        ]
+    },
+    {
+        "id": "a5a9d871.f99c08",
+        "type": "link out",
+        "z": "da55e56e.fcd428",
+        "name": "",
+        "links": [
+            "4bdb62a7.4f275c"
+        ],
+        "x": 255,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "3158deb3.a02292",
+        "type": "api-current-state",
+        "z": "da55e56e.fcd428",
+        "name": "Lights?",
+        "server": "4ee348e3.abe878",
+        "version": 1,
+        "outputs": 2,
+        "halt_if": "on",
+        "halt_if_type": "str",
+        "halt_if_compare": "is",
+        "override_topic": false,
+        "entity_id": "input_boolean.alarm_clock_lights",
+        "state_type": "str",
+        "state_location": "",
+        "override_payload": "none",
+        "entity_location": "",
+        "override_data": "none",
+        "blockInputOverrides": false,
+        "x": 340,
+        "y": 360,
+        "wires": [
+            [
+                "81a06948.86e888"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "fd4dfa74.0bb0c8",
+        "type": "api-current-state",
+        "z": "da55e56e.fcd428",
+        "name": "Fan?",
+        "server": "4ee348e3.abe878",
+        "version": 1,
+        "outputs": 2,
+        "halt_if": "on",
+        "halt_if_type": "str",
+        "halt_if_compare": "is",
+        "override_topic": false,
+        "entity_id": "input_boolean.alarm_clock_fan",
+        "state_type": "str",
+        "state_location": "",
+        "override_payload": "none",
+        "entity_location": "",
+        "override_data": "none",
+        "blockInputOverrides": false,
+        "x": 330,
+        "y": 320,
+        "wires": [
+            [
+                "6e0aba2a.5d4db4"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "86dbcd67.42cca",
+        "type": "inject",
+        "z": "da55e56e.fcd428",
+        "name": "",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "repeat": "60",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "x": 110,
+        "y": 60,
+        "wires": [
+            [
+                "cfc450ba.908ce"
+            ]
+        ]
+    },
+    {
+        "id": "cfc450ba.908ce",
+        "type": "api-current-state",
+        "z": "da55e56e.fcd428",
+        "name": "Alarm Clock ON?",
+        "server": "4ee348e3.abe878",
+        "version": 1,
+        "outputs": 2,
+        "halt_if": "off",
+        "halt_if_type": "str",
+        "halt_if_compare": "is",
+        "override_topic": false,
+        "entity_id": "input_boolean.alarm_clock",
+        "state_type": "str",
+        "state_location": "",
+        "override_payload": "none",
+        "entity_location": "",
+        "override_data": "none",
+        "blockInputOverrides": false,
+        "x": 130,
+        "y": 100,
+        "wires": [
+            [],
+            [
+                "5df974e3.874b1c",
+                "ec4ec36c.0460f"
+            ]
+        ]
+    },
+    {
+        "id": "760d52fc.8d31bc",
+        "type": "api-current-state",
+        "z": "da55e56e.fcd428",
+        "name": "Temp",
+        "server": "4ee348e3.abe878",
+        "version": 1,
+        "outputs": 1,
+        "halt_if": "",
+        "halt_if_type": "str",
+        "halt_if_compare": "is",
+        "override_topic": false,
+        "entity_id": "input_number.morning_thermostat",
+        "state_type": "str",
+        "state_location": "payload",
+        "override_payload": "msg",
+        "entity_location": "data",
+        "override_data": "msg",
+        "blockInputOverrides": false,
+        "x": 850,
+        "y": 240,
+        "wires": [
+            [
+                "423099b9.030218"
+            ]
+        ]
+    },
+    {
+        "id": "d338439a.60718",
+        "type": "api-current-state",
+        "z": "da55e56e.fcd428",
+        "name": "Temp",
+        "server": "4ee348e3.abe878",
+        "version": 1,
+        "outputs": 1,
+        "halt_if": "",
+        "halt_if_type": "str",
+        "halt_if_compare": "is",
+        "override_topic": false,
+        "entity_id": "input_select.morning_thermostat",
+        "state_type": "str",
+        "state_location": "payload",
+        "override_payload": "msg",
+        "entity_location": "data",
+        "override_data": "msg",
+        "blockInputOverrides": false,
+        "x": 330,
+        "y": 280,
+        "wires": [
+            [
+                "9bf8185e.720cb8"
+            ]
+        ]
+    },
+    {
+        "id": "423099b9.030218",
+        "type": "function",
+        "z": "da55e56e.fcd428",
+        "name": "",
+        "func": "var temp = msg.payload\nvar newmsg = {};\nnewmsg.payload = { data: { \"temperature\":temp} };\nreturn newmsg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 970,
+        "y": 240,
+        "wires": [
+            [
+                "264bbac8.06b266"
+            ]
+        ]
+    },
+    {
+        "id": "9bf8185e.720cb8",
+        "type": "switch",
+        "z": "da55e56e.fcd428",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "neq",
+                "v": "Off",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 410,
+        "y": 240,
+        "wires": [
+            [
+                "7873516f.c6e79"
+            ]
+        ]
+    },
+    {
+        "id": "639a4d98.98a434",
+        "type": "api-current-state",
+        "z": "da55e56e.fcd428",
+        "name": "Temp",
+        "server": "4ee348e3.abe878",
+        "version": 1,
+        "outputs": 1,
+        "halt_if": "",
+        "halt_if_type": "str",
+        "halt_if_compare": "is",
+        "override_topic": false,
+        "entity_id": "input_select.morning_thermostat",
+        "state_type": "str",
+        "state_location": "payload",
+        "override_payload": "msg",
+        "entity_location": "data",
+        "override_data": "msg",
+        "blockInputOverrides": false,
+        "x": 570,
+        "y": 240,
+        "wires": [
+            [
+                "c068f181.5e934"
+            ]
+        ]
+    },
+    {
+        "id": "c068f181.5e934",
+        "type": "function",
+        "z": "da55e56e.fcd428",
+        "name": "",
+        "func": "var hvac_mode = msg.payload\nvar newmsg = {};\n\nif (hvac_mode === \"Heat\") {\n    newmsg.payload = { data: { \"hvac_mode\":\"heat\"} }\n}\nelse if (hvac_mode === \"Cool\") {\n    newmsg.payload = { data: { \"hvac_mode\":\"cool\"} }\n}\nreturn newmsg;",
+        "outputs": 1,
+        "noerr": 0,
+        "x": 690,
+        "y": 240,
+        "wires": [
+            [
+                "3daeb65a.3ab3fa"
+            ]
+        ]
+    },
+    {
+        "id": "c8cdcf2d.35f52",
+        "type": "link out",
+        "z": "da55e56e.fcd428",
+        "name": "",
+        "links": [
+            "f53d9290.47de58"
+        ],
+        "x": 875,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "64370a76.854444",
+        "type": "hue-light",
+        "z": "da55e56e.fcd428",
+        "name": "Stairway Light",
+        "bridge": "3d953821.0b6b78",
+        "lightid": "16",
+        "colornamer": true,
+        "x": 1460,
+        "y": 320,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f53d9290.47de58",
+        "type": "link in",
+        "z": "da55e56e.fcd428",
+        "name": "",
+        "links": [
+            "c8cdcf2d.35f52"
+        ],
+        "x": 1315,
+        "y": 320,
+        "wires": [
+            [
+                "64370a76.854444",
+                "a3cb910a.22eee"
+            ]
+        ]
+    },
+    {
+        "id": "a3cb910a.22eee",
+        "type": "hue-group",
+        "z": "da55e56e.fcd428",
+        "name": "Bedroom",
+        "bridge": "3d953821.0b6b78",
+        "groupid": "1",
+        "colornamer": true,
+        "x": 1440,
+        "y": 280,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "60156928.5914b8",
+        "type": "hue-group",
+        "z": "da55e56e.fcd428",
+        "name": "Bathroom",
+        "bridge": "3d953821.0b6b78",
+        "groupid": "8",
+        "colornamer": true,
+        "x": 1440,
+        "y": 360,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f0c8c222.2380c",
+        "type": "server-state-changed",
+        "z": "da55e56e.fcd428",
+        "name": "Snooze On",
+        "server": "4ee348e3.abe878",
+        "version": 1,
+        "entityidfilter": "input_boolean.snooze",
+        "entityidfiltertype": "substring",
+        "outputinitially": false,
+        "state_type": "str",
+        "haltifstate": "on",
+        "halt_if_type": "str",
+        "halt_if_compare": "is",
+        "outputs": 2,
+        "output_only_on_state_change": true,
+        "x": 120,
+        "y": 1040,
+        "wires": [
+            [
+                "22986f1a.56631",
+                "db175d0e.3e3b9",
+                "7cc94bb0.42f9f4",
+                "eec2b092.4b28d",
+                "d728308a.6fdce"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "6e0aba2a.5d4db4",
+        "type": "trigger",
+        "z": "da55e56e.fcd428",
+        "op1": "",
+        "op2": "",
+        "op1type": "nul",
+        "op2type": "pay",
+        "duration": "5",
+        "extend": false,
+        "units": "min",
+        "reset": "stop",
+        "bytopic": "all",
+        "name": "",
+        "x": 530,
+        "y": 320,
+        "wires": [
+            [
+                "9d48b660.93a628"
+            ]
+        ]
+    },
+    {
+        "id": "81a06948.86e888",
+        "type": "trigger",
+        "z": "da55e56e.fcd428",
+        "op1": "",
+        "op2": "",
+        "op1type": "nul",
+        "op2type": "pay",
+        "duration": "8",
+        "extend": false,
+        "units": "min",
+        "reset": "stop",
+        "bytopic": "all",
+        "name": "",
+        "x": 530,
+        "y": 360,
+        "wires": [
+            [
+                "3bd34806.d657c8"
+            ]
+        ]
+    },
+    {
+        "id": "295113ab.b1f22c",
+        "type": "api-call-service",
+        "z": "da55e56e.fcd428",
+        "name": "Alarm Routine On",
+        "server": "4ee348e3.abe878",
+        "version": 1,
+        "debugenabled": false,
+        "service_domain": "input_boolean",
+        "service": "turn_on",
+        "entityId": "input_boolean.alarm_routine",
+        "data": "",
+        "dataType": "json",
+        "mergecontext": "",
+        "output_location": "payload",
+        "output_location_type": "msg",
+        "mustacheAltTags": false,
+        "x": 530,
+        "y": 960,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "22986f1a.56631",
+        "type": "api-call-service",
+        "z": "da55e56e.fcd428",
+        "name": "Alarm Routine Off",
+        "server": "4ee348e3.abe878",
+        "version": 1,
+        "debugenabled": false,
+        "service_domain": "input_boolean",
+        "service": "turn_off",
+        "entityId": "input_boolean.alarm_routine",
+        "data": "",
+        "dataType": "json",
+        "mergecontext": "",
+        "output_location": "payload",
+        "output_location_type": "msg",
+        "mustacheAltTags": false,
+        "x": 330,
+        "y": 960,
+        "wires": [
+            [
+                "295113ab.b1f22c"
+            ]
+        ]
+    },
+    {
+        "id": "db175d0e.3e3b9",
+        "type": "api-call-service",
+        "z": "da55e56e.fcd428",
+        "name": "Reset Boolean",
+        "server": "4ee348e3.abe878",
+        "version": 1,
+        "debugenabled": false,
+        "service_domain": "input_boolean",
+        "service": "turn_off",
+        "entityId": "input_boolean.snooze",
+        "data": "",
+        "dataType": "json",
+        "mergecontext": "",
+        "output_location": "",
+        "output_location_type": "none",
+        "mustacheAltTags": false,
+        "x": 320,
+        "y": 1000,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7cc94bb0.42f9f4",
+        "type": "api-call-service",
+        "z": "da55e56e.fcd428",
+        "name": "Turn Off Lights",
+        "server": "4ee348e3.abe878",
+        "version": 1,
+        "debugenabled": false,
+        "service_domain": "light",
+        "service": "turn_off",
+        "entityId": "light.bathroom, light.bedroom, light.living_room_lamp, light.living_room_lights, light.office, light.ryans_office, light.bedroom_tv_light",
+        "data": "{\"transition\":15}",
+        "dataType": "json",
+        "mergecontext": "",
+        "output_location": "",
+        "output_location_type": "none",
+        "mustacheAltTags": false,
+        "x": 320,
+        "y": 1040,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "eec2b092.4b28d",
+        "type": "api-call-service",
+        "z": "da55e56e.fcd428",
+        "name": "Stairway Light 10%",
+        "server": "4ee348e3.abe878",
+        "version": 1,
+        "debugenabled": false,
+        "service_domain": "light",
+        "service": "turn_on",
+        "entityId": "light.stairway",
+        "data": "{\"brightness_pct\":10,\"transition\":15}",
+        "dataType": "json",
+        "mergecontext": "",
+        "output_location": "",
+        "output_location_type": "none",
+        "mustacheAltTags": false,
+        "x": 330,
+        "y": 1080,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d728308a.6fdce",
+        "type": "api-call-service",
+        "z": "da55e56e.fcd428",
+        "name": "Turn On Bedroom Fan",
+        "server": "4ee348e3.abe878",
+        "version": 1,
+        "debugenabled": false,
+        "service_domain": "fan",
+        "service": "turn_on",
+        "entityId": "fan.bedroom_fan",
+        "data": "",
+        "dataType": "json",
+        "mergecontext": "",
+        "output_location": "",
+        "output_location_type": "none",
+        "mustacheAltTags": false,
+        "x": 340,
+        "y": 1120,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "4ee348e3.abe878",
+        "type": "server",
+        "z": "",
+        "name": "Home Assistant",
+        "legacy": false,
+        "hassio": false,
+        "rejectUnauthorizedCerts": true,
+        "ha_boolean": "y|yes|true|on|home|open",
+        "connectionDelay": true,
+        "cacheJson": true
+    },
+    {
+        "id": "3d953821.0b6b78",
+        "type": "hue-bridge",
+        "z": "",
+        "name": "ShepherdLights",
+        "bridge": "10.0.1.2",
+        "key": "-TwpZzakkD5UfkOwN86pahHqtj2Vl6SGJ9p07aOE",
+        "interval": "3000"
+    }
+]
