@@ -494,8 +494,8 @@
         "output_location": "",
         "output_location_type": "none",
         "mustacheAltTags": false,
-        "x": 510,
-        "y": 280,
+        "x": 390,
+        "y": 240,
         "wires": [
             [
                 "639a4d98.98a434"
@@ -506,7 +506,7 @@
         "id": "3daeb65a.3ab3fa",
         "type": "api-call-service",
         "z": "da55e56e.fcd428",
-        "name": "Switch to Heat",
+        "name": "Set HVAC Mode",
         "server": "4ee348e3.abe878",
         "version": 1,
         "debugenabled": false,
@@ -519,7 +519,7 @@
         "output_location": "",
         "output_location_type": "none",
         "mustacheAltTags": false,
-        "x": 720,
+        "x": 680,
         "y": 280,
         "wires": [
             [
@@ -531,20 +531,20 @@
         "id": "264bbac8.06b266",
         "type": "api-call-service",
         "z": "da55e56e.fcd428",
-        "name": "Heat to 67",
+        "name": "Set Temp",
         "server": "4ee348e3.abe878",
         "version": 1,
         "debugenabled": false,
         "service_domain": "climate",
         "service": "set_temperature",
         "entityId": "climate.home",
-        "data": "{\"temperature\":67}",
+        "data": "",
         "dataType": "json",
         "mergecontext": "",
         "output_location": "",
         "output_location_type": "none",
         "mustacheAltTags": false,
-        "x": 950,
+        "x": 880,
         "y": 280,
         "wires": [
             []
@@ -945,7 +945,7 @@
         "entity_location": "data",
         "override_data": "msg",
         "blockInputOverrides": false,
-        "x": 850,
+        "x": 730,
         "y": 240,
         "wires": [
             [
@@ -960,8 +960,8 @@
         "name": "Temp",
         "server": "4ee348e3.abe878",
         "version": 1,
-        "outputs": 1,
-        "halt_if": "",
+        "outputs": 2,
+        "halt_if": "Off",
         "halt_if_type": "str",
         "halt_if_compare": "is",
         "override_topic": false,
@@ -975,8 +975,9 @@
         "x": 330,
         "y": 280,
         "wires": [
+            [],
             [
-                "9bf8185e.720cb8"
+                "7873516f.c6e79"
             ]
         ]
     },
@@ -985,39 +986,14 @@
         "type": "function",
         "z": "da55e56e.fcd428",
         "name": "",
-        "func": "var temp = msg.payload\nvar newmsg = {};\nnewmsg.payload = { data: { \"temperature\":temp} };\nreturn newmsg;",
+        "func": "var temp = parseInt(msg.payload);\nvar newmsg = {};\nnewmsg.payload = { data: { \"temperature\":temp} };\nreturn newmsg;",
         "outputs": 1,
         "noerr": 0,
-        "x": 970,
+        "x": 870,
         "y": 240,
         "wires": [
             [
                 "264bbac8.06b266"
-            ]
-        ]
-    },
-    {
-        "id": "9bf8185e.720cb8",
-        "type": "switch",
-        "z": "da55e56e.fcd428",
-        "name": "",
-        "property": "payload",
-        "propertyType": "msg",
-        "rules": [
-            {
-                "t": "neq",
-                "v": "Off",
-                "vt": "str"
-            }
-        ],
-        "checkall": "true",
-        "repair": false,
-        "outputs": 1,
-        "x": 410,
-        "y": 240,
-        "wires": [
-            [
-                "7873516f.c6e79"
             ]
         ]
     },
@@ -1040,8 +1016,8 @@
         "entity_location": "data",
         "override_data": "msg",
         "blockInputOverrides": false,
-        "x": 570,
-        "y": 240,
+        "x": 490,
+        "y": 280,
         "wires": [
             [
                 "c068f181.5e934"
@@ -1056,7 +1032,7 @@
         "func": "var hvac_mode = msg.payload\nvar newmsg = {};\n\nif (hvac_mode === \"Heat\") {\n    newmsg.payload = { data: { \"hvac_mode\":\"heat\"} }\n}\nelse if (hvac_mode === \"Cool\") {\n    newmsg.payload = { data: { \"hvac_mode\":\"cool\"} }\n}\nreturn newmsg;",
         "outputs": 1,
         "noerr": 0,
-        "x": 690,
+        "x": 570,
         "y": 240,
         "wires": [
             [
